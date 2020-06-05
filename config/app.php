@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Overtrue\LaravelWeChat\ServiceProvider::class,
+        \twinkle\pusher\PushStreamBroadcastProvider::class,
 
         /*
          * Application Service Providers...

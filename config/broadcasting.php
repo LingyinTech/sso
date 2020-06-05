@@ -54,6 +54,11 @@ return [
             'driver' => 'null',
         ],
 
+        'push-stream' => [
+            'driver' => 'push-stream',
+            'base_uri' => env('PUSH_STREAM_URI', 'http://localhost'),
+            'pub_path' => env('PUSH_STREAM_PUB', '/pub?id='),
+        ]
     ],
 
 ];

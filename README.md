@@ -24,6 +24,10 @@ php artisan migration
 
 * 第一步
 
+申请一个 api_token
+
+* 第二步
+
 应用判断登录，跳转（或弹框）至登录页 https://sso.lingyin99.com/?redirect_uri=https://www.baidu.com  
 
 redirect_uri 为回调页面，为了避免不必要的问题，应该对其做 urlencode 编码
@@ -32,6 +36,6 @@ redirect_uri 为回调页面，为了避免不必要的问题，应该对其做 
 
 sso 验证扫码成功后，会回调至 redirect_uri , 并会带回一个 code。  
 
-应用接收到 code 后，请求接口 https://sso.lingyin99.com/user-info?code=xxxxx ,获取回用户信息。
+应用接收到 code 后，请求接口 https://sso.lingyin99.com/api/user-info?token={$apiToken}&code={$code} ,获取回用户信息。
 
 种上登录态，该干啥就干啥了
