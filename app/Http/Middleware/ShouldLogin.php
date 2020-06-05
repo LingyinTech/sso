@@ -8,25 +8,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 
-class SSOLogin
+class ShouldLogin
 {
 
-    protected function redirect(Request $request, $code)
+    protected function redirect(Request $request)
     {
-        return view('index.redirect', [
-            'redirect_uri' => $request->get('redirect_uri', ''),
-            'code' => $code,
-        ]);
+        if ($request->expectsJson()) {
+            return response('请先登录', 403);
+        }
+
+        return redirect(route('login', ['redirect_uri' => urlencode($request->fullUrl())]));
     }
 
     protected function checkSession(Request $request)
     {
         if ($request->session()->get('code')
             && $openid = $request->session()->get('openid')) {
-            $code = md5(uniqid('lingyin-code'));
-            Cache::put("lingyin:openid:{$code}", $openid, 3600);
-            $this->redirect($request, $code);
+            return true;
         }
+
+        return false;
     }
 
     protected function checkCookie(Request $request)
@@ -46,9 +47,11 @@ class SSOLogin
                 $request->session()->put('code', $userInfo->code);
                 $request->session()->put('code', $record->openid);
 
-                $this->redirect($request, $code);
+                return true;
             }
         }
+
+        return false;
     }
 
     /**
@@ -60,10 +63,10 @@ class SSOLogin
      */
     public function handle($request, \Closure $next)
     {
-        $this->checkSession($request);
+        if ($this->checkSession($request) || $this->checkCookie($request)) {
+            return $next($request);
+        }
 
-        $this->checkCookie($request);
-
-        return $next($request);
+        return $this->redirect($request);
     }
 }

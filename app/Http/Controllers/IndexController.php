@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 
 
 use App\Jobs\WechatLoginExpireJob;
+use App\Models\TokenRecord;
+use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class IndexController extends Controller
@@ -28,16 +29,15 @@ class IndexController extends Controller
 
         $nowTime = time();
 
-
-        DB::table('token_record')->insert([
+        (new TokenRecord())->addRecord([
             'token' => $response['token'],
             'ticket' => $result['ticket'],
             'redirect_uri' => $response['redirect_uri'],
             'expireAt' => $nowTime + $result['expire_seconds'] + 300
         ]);
 
-        Cache::put("lingyin:token:{$response['token']}", $response['token'], $result['expire_seconds'] - 10);
-        dispatch(new WechatLoginExpireJob($response['token']))->delay($result['expire_seconds'] - 10);
+        Cache::put("lingyin:token:{$response['token']}", $response['token'], $result['expire_seconds']);
+        dispatch(new WechatLoginExpireJob($response['token']))->delay($result['expire_seconds'] - 30);
 
         $cookie = new Cookie('lingyin-token', $response['token'], $nowTime + 3600);
         $timestamp = new Cookie('lingyin-ttl', $nowTime, $nowTime + 3600);
@@ -63,9 +63,7 @@ class IndexController extends Controller
 
         $openid = Cache::get("lingyin:openid:{$code}");
 
-        $userInfo = DB::table('user_info')
-            ->select(['code', 'nickname', 'sex', 'country', 'province', 'city', 'headimgurl'])
-            ->where('openid', $openid)->get();
+        $userInfo = (new UserInfo())->getUserInfoByOpenid($openid);
 
         return response()->json([
             'status' => 0,

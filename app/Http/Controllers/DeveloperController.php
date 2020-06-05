@@ -11,21 +11,66 @@ class DeveloperController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->ajax()) {
+        $code = $request->session()->get('code');
 
-            return response()->json();
-        }
-
-        $code = '101e0014413aed2114daddb6368b3d83';
         $list = DB::table('developer')
             ->where('code', $code)
             ->orderByDesc('id')
-            ->paginate(5);
+            ->simplePaginate(20);
 
-        return view('developer.index',[
+        if ($request->ajax()) {
+            return response()->json([
+                'list' => $list
+            ]);
+        }
+
+        return view('developer.index', [
             'list' => $list,
         ]);
     }
 
+    public function store(Request $request)
+    {
+        exit(0);
+        $result = DB::table('developer')->insert([
+            'code' => $request->session()->get('code'),
+            'api_token' => uniqid(),
+            'white_list' => $request->get('white_list', ''),
+        ]);
 
+        return response()->json([
+            'code' => $result ? 0 : 1,
+            'msg' => $result ? 'success' : 'fail',
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $check = DB::table('developer')->where([
+            'id' => $id,
+            'code' => $request->session()->get('code'),
+        ])->exists();
+
+        if (!$check) {
+            return response()->json([
+                'code' => 1,
+                'msg' => '记录不存在',
+            ]);
+        }
+
+        $result = DB::table('developer')
+            ->where([
+                'id' => $id,
+                'code' => $request->session()->get('code'),
+            ])
+            ->update([
+                'white_list' => $request->get('white_list'),
+            ]);
+
+        return response()->json([
+            'code' => $result ? 0 : 1,
+            'msg' => $result ? 'success' : 'fail',
+        ]);
+
+    }
 }

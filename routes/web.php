@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 Route::any('/wechat', 'WeChatController@serve');
 
-Route::get('/', ['middleware' => 'sso-login', 'uses' => 'IndexController@index']);
+Route::get('/', ['middleware' => 'sso-login', 'uses' => 'IndexController@index'])->name('login');
 
-Route::get('/developer', 'DeveloperController@index');
+Route::middleware('should-login')->group(function () {
+    Route::post('/developer/create', 'DeveloperController@store');
+
+    Route::post('/developer/{id:[\d]+}', 'DeveloperController@update');
+
+    Route::get('/developer', 'DeveloperController@index');
+});
+

@@ -46,12 +46,11 @@ class ScanEvent extends Event
             $update
         );
 
-        Cache::forget("lingyin:token:{$token}");
-
         event(new WechatLoginEvent($token,[
             'type' => 'login-success',
             'code' => $code
         ]));
+        Cache::forget("lingyin:token:{$token}");
 
         return '登录成功';
     }

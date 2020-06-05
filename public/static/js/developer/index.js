@@ -93,7 +93,28 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+;
 
+(function () {
+  $('.action-add').on('click', function () {
+    var that = this;
+    axios({
+      method: 'post',
+      url: '/developer/create',
+      data: {
+        white_list: $(that).parents('tr').children('td').children('textarea[name=white_list]').val().trim()
+      }
+    }).then(function (e) {
+      console.log(e);
+
+      if (403 === e.status) {} else if (0 === e.data.code) {} else {
+        layer.msg(e.data.msg);
+      }
+    })["catch"](function (e) {
+      console.log(e);
+    });
+  });
+})();
 
 /***/ }),
 
