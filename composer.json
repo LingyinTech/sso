@@ -38,8 +38,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "twinkle\\pusher\\": "laravel-push-stream/src"
+            "App\\": "app/"
         },
         "classmap": [
             "database/seeds",

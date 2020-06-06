@@ -9,7 +9,6 @@ use App\Models\TokenRecord;
 use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class IndexController extends Controller

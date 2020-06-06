@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::any('/wechat', 'WeChatController@serve');
+Route::any('/wechat', 'WechatController@serve');
 
 Route::get('/', ['middleware' => 'sso-login', 'uses' => 'IndexController@index'])->name('login');
 
