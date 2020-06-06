@@ -10,7 +10,7 @@
     <div class="weixin">
         <div class="weixin-icon">
             <input type="hidden" name="redirect_uri" value="{{ $redirect_uri }}">
-            <input type="hidden" name="code" value="{{ $code }}}">
+            <input type="hidden" name="code" value="{{ $code }}">
         </div>
     </div>
 
