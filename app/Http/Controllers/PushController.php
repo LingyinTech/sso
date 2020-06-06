@@ -14,7 +14,7 @@ class PushController extends Controller
         $message = [
             'code' => $code,
             'type' => $request->get('type'),
-            'data' => $request->json(),
+            'data' => $request->json()->all(),
         ];
         dispatch(new WechatMessageJob($message));
     }

@@ -54,10 +54,10 @@ class WechatMessageJob extends Job
             ->select('openid')
             ->where('code', $this->message['code'])
             ->first();
-        if (empty($data) || empty($data['openid'])) {
+        if (empty($data) || empty($data->openid)) {
             return;
         }
-        $openid = $data['openid'];
+        $openid = $data->openid;
         $type = $this->message['type'];
         $data = $this->message['data'];
         switch ($type) {

@@ -29,7 +29,7 @@ class CustomerMessage extends Client
     {
         switch ($type) {
             case self::TEXT:
-                $message = new Text($message);
+                $message = new Text($message['text']);
                 break;
             case self::IMAGE:
                 $message = new Image($message);
