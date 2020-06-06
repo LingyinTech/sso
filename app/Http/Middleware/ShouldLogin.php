@@ -5,10 +5,10 @@ namespace App\Http\Middleware;
 use App\Models\TokenRecord;
 use App\Models\UserInfo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Log;
 
-class ShouldLogin
+class ShouldLogin extends Upyun
 {
 
     protected function redirect(Request $request)
@@ -35,17 +35,15 @@ class ShouldLogin
         $token = Cookie::get('lingyin-token');
         $ttl = Cookie::get('lingyin-ttl', '');
         $sign = Cookie::get('lingyin-sign', '');
+
         if ($token && $sign == md5($token . $ttl . $request->userAgent() . $request->ip())) {
 
             $record = (new TokenRecord())->getExpireRecordByToken($token);
 
             if ($record && $record->openid && $userInfo = (new UserInfo())->getUserInfoByOpenid($record->openid)) {
 
-                $code = md5(uniqid('lingyin-code'));
-                Cache::put("lingyin:openid:{$code}", $record->openid, 3600);
-
                 $request->session()->put('code', $userInfo->code);
-                $request->session()->put('code', $record->openid);
+                $request->session()->put('openid', $record->openid);
 
                 return true;
             }
@@ -61,8 +59,10 @@ class ShouldLogin
      * @param \Closure $next
      * @return mixed
      */
-    public function handle($request, \Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
+        $this->adaptUpyun($request);
+
         if ($this->checkSession($request) || $this->checkCookie($request)) {
             return $next($request);
         }

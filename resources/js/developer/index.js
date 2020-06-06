@@ -13,9 +13,8 @@
         }).then((e) => {
             console.log(e);
             if (403 === e.status) {
-
             } else if (0 === e.data.code) {
-
+                layer.msg('填加成功')
             } else {
                 layer.msg(e.data.msg);
             }

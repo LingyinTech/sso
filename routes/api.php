@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/user-info', 'IndexController@getUserInfo');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('api-auth')->group(function () {
+    Route::get('/user-info', 'IndexController@getUserInfo');
 });

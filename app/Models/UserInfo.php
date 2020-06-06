@@ -17,6 +17,6 @@ class UserInfo extends Collection
     {
         return DB::table('user_info')
             ->select(['code', 'nickname', 'sex', 'country', 'province', 'city', 'headimgurl'])
-            ->where('openid', $openid)->get();
+            ->where('openid', $openid)->first();
     }
 }

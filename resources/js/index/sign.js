@@ -31,6 +31,7 @@ require('../push');
                         layer.msg('未设置回调地址');
                         return;
                     }
+                    redirectUri = decodeURIComponent(redirectUri);
                     let splice = -1 === redirectUri.indexOf('?') ? '?' : '&';
                     window.top.location.href = redirectUri + splice + 'code=' + e.data.code;
                 }

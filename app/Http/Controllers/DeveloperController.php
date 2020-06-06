@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DeveloperController extends Controller
 {
@@ -31,7 +32,7 @@ class DeveloperController extends Controller
 
     public function store(Request $request)
     {
-        exit(0);
+        Log::info('');
         $result = DB::table('developer')->insert([
             'code' => $request->session()->get('code'),
             'api_token' => uniqid(),

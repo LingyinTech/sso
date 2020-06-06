@@ -9,6 +9,7 @@ use App\Models\TokenRecord;
 use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class IndexController extends Controller
@@ -40,7 +41,7 @@ class IndexController extends Controller
 
         $cookie = new Cookie('lingyin-token', $response['token'], $nowTime + 3600);
         $timestamp = new Cookie('lingyin-ttl', $nowTime, $nowTime + 3600);
-        $signCookie = new Cookie('lingyin-sign', md5($response['token'] . time() . $request->userAgent() . $request->ip()), $nowTime + 3600);
+        $signCookie = new Cookie('lingyin-sign', md5($response['token'] . $nowTime . $request->userAgent() . $request->ip()), $nowTime + 3600);
 
         if ($request->ajax()) {
             return response()
