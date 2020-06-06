@@ -53,7 +53,7 @@ class WechatMessageJob extends Job
         $data = DB::table('user_info')
             ->select('openid')
             ->where('code', $this->message['code'])
-            ->get();
+            ->first();
         if (empty($data) || empty($data['openid'])) {
             return;
         }

@@ -17,4 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('api-auth')->group(function () {
     Route::get('/user-info', 'IndexController@getUserInfo');
+
+    Route::post('/push/{code}', 'PushController@index');
 });
